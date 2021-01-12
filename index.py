@@ -1,5 +1,4 @@
 import requests,json
-# import logging
 from log import Log
 from api import coinTodayExp,usernav,mangaSign,attentionVideo,popularVideo,liveSign,coinAdd,videoProgress,videoShare
 from setting import bili_jct,coinnum,select_like,headers,SCKEY
@@ -21,23 +20,23 @@ class Exp:
         self.getUserinfo()
         self.liveSign()
         self.mangaSign()
-        if self.money < 1:
-            logger.info('硬币不足，终止投币')
-            return
         self.getAttentionVideo()
         self.getPopularVideo()
         self.share(self.attention_aidList[1]['aid'])
         self.report(self.attention_aidList[1]['aid'],self.attention_aidList[1]['cid'],1000)
         # 投币(关注up主新视频和热门视频)
+        if self.money < 1:
+            logger.info('硬币不足，终止投币')
+            return
         for item in self.attention_aidList + self.popular_aidList:
             exp = self.getCoinTodayExp()
             if exp == 50:
                 logger.info('今日投币经验已达成')
+                sendmsgtowx("今日经验已达成")
                 return
             self.coin(item['aid'])
     # 获取用户信息
     def getUserinfo(self):
-        # global usernav
         try:
             res = requests.get(url=usernav,headers=headers)
             user_res = json.loads(res.text)['data']
@@ -49,7 +48,7 @@ class Exp:
             self.money = money
             logger.info('用户昵称：' + uname)
             logger.info('硬币余额：' + str(money))
-            logger.info('当前等级：' + str(level_info['current_level']) + '当前经验：' + str(level_info['current_exp']) + '下一级所需经验：' + str(level_info['next_exp']-level_info['current_exp']))
+            logger.info('当前等级：{},当前经验：{},下一级所需经验：{}'.format(level_info['current_level'],level_info['current_exp'],level_info['next_exp']-level_info['current_exp']))
         except:
             sendmsgtowx()
             logger.info('请求异常')
@@ -61,8 +60,6 @@ class Exp:
         for item in json.loads(res.text)['data']['cards']:
             video_list.append({'aid':json.loads(item['card'])['aid'],'cid':json.loads(item['card'])['cid']})
         self.attention_aidList = video_list
-        # print(video_list)
-        # print('关注up主的新视频',video_list)
     def getCoinTodayExp(self):
         url = coinTodayExp
         res = requests.get(url=url,headers=headers)
@@ -77,7 +74,6 @@ class Exp:
         for item in json.loads(res.text)['data']['list']:
             video_list.append({'aid':item['aid'],'cid':item['cid']})
         self.popular_aidList = video_list
-        # print('热门视频',video_list)
     # B站直播签到
     def liveSign(self):
         try:
@@ -132,7 +128,7 @@ class Exp:
         share_res = json.loads(res.text)
         if share_res['code'] == 0:
             self.hasShare = 1
-            logger.info('分享成功')
+            logger.info('视频分享成功')
         else:
             logger.info(share_res['message'])
     #漫画签到
@@ -148,5 +144,5 @@ class Exp:
             else:
                 logger.info('漫画已签到或签到失败')
         except:
-            logger.info('请求异常')
+            logger.info('漫画签到异常')
 Exp()

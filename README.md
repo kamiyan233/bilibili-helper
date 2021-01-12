@@ -1,15 +1,20 @@
-## bilibili每日获取经验任务，自动投币，直播签到，漫画签到，转发，观看视频
+## bilibili获取经验任务，自动投币，直播签到，漫画签到，转发，观看视频
 
 练习项目还在完善中，有些异常没有处理
 
 ### 用户参数
 
-+ 进入到b站登录并获取到cookie中的三个参数：`SESSDATA`，`bili_jct`，`DedeUserID`
-+ 填入到`setting.py`的对应参数下面,内部其他参数已做注释说明
-+ 如果有server酱 `SCKEY` 可以填入 当请求异常会有微信推送。
++ ~~进入到b站登录并获取到cookie中的三个参数：`SESSDATA`，`bili_jct`，`DedeUserID`~~
+- 改为直接复制`cookie`写到setting中`myCookie`不用找这3个参数,省去找的麻烦。
+- F12 network -> 随便找个请求 -> 复制请求头cookie
+
+![图示](docs/img/cookie.png)
+
+<!-- + 填入到`setting.py`的对应参数下面,内部其他参数已做注释说明 -->
++ 如果有server酱 `SCKEY` 也可以填入 当请求异常会有微信推送。
 `server`酱链接：`https://sct.ftqq.com/`
 
-#### 本人是放在centOS上使用 `crontab` 每日自动跑脚本
+#### 本人放在centOS上使用 `crontab` 每日自动跑脚本
 - 每天8点执行任务:
 ```
     0 8 * * *  cd /项目目录 && /usr/bin/python3 index.py

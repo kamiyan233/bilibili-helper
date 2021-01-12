@@ -1,7 +1,14 @@
 # cookie
-bili_jct = ""
-SESSDATA = ""
-DedeUserID = ""
+""" 这里填cookie """
+myCookie = ""
+
+cookies = dict([l.split("=", 1) for l in myCookie.split("; ")])
+
+# 3个用户相关参数
+bili_jct = cookies['bili_jct']
+SESSDATA = cookies['SESSDATA']
+DedeUserID = cookies['DedeUserID']
+
 # server酱
 SCKEY = ""
 # 每次投入硬币数量 1 或 2
