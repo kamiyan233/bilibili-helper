@@ -1,6 +1,6 @@
 import requests,json
 from log import Log
-from api import coinTodayExp,usernav,mangaSign,attentionVideo,popularVideo,liveSign,coinAdd,videoProgress,videoShare
+from api import coinTodayExp,usernav,mangaSign,attentionVideo,popularVideo,liveSign,coinAdd,videoProgress,videoShare,silverNum,silver2coin
 from setting import bili_jct,coinnum,select_like,headers,SCKEY
 
 # 日志
@@ -22,6 +22,7 @@ class Exp:
         self.mangaSign()
         self.getAttentionVideo()
         self.getPopularVideo()
+        self.silverToCoins()
         self.share(self.attention_aidList[1]['aid'])
         self.report(self.attention_aidList[1]['aid'],self.attention_aidList[1]['cid'],1000)
         # 投币(关注up主新视频和热门视频)
@@ -40,7 +41,7 @@ class Exp:
         try:
             res = requests.get(url=usernav,headers=headers)
             user_res = json.loads(res.text)['data']
-            # print(user_res.text)
+            print(user_res)
             money = user_res['money']
             uname = user_res['uname']
             self.uid = user_res['wallet']['mid']
@@ -145,4 +146,22 @@ class Exp:
                 logger.info('漫画已签到或签到失败')
         except:
             logger.info('漫画签到异常')
+    def silverToCoins(self):
+        res1 = requests.get(url=silverNum,headers=headers)
+        silver_num = json.loads(res1.text)['data']['silver']
+        if silver_num < 700:
+            logger.info('银瓜子不足700兑换硬币')
+            return
+        post_data = {
+            "csrf_token": bili_jct,
+            "csrf": bili_jct,
+            # "visit_id": ""
+        }
+        res2 = requests.post(url=silver2coin,headers=headers,data=post_data)
+        res_silver2Coins = json.loads(res2.text)
+        if res_silver2Coins['code']==0:
+            logger.info('银瓜子兑换结果：成功')
+        else:
+            logger.info('银瓜子兑换结果：'+res_silver2Coins['msg'])
+
 Exp()

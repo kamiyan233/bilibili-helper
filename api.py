@@ -26,3 +26,7 @@ isCoin = "https://api.bilibili.com/x/web-interface/archive/coins"
 videoProgress = "http://api.bilibili.com/x/v2/history/report"
 # 客户端分享视频
 videoShare = "https://api.bilibili.com/x/web-interface/share/add"
+# 银瓜子相关
+silverNum = "https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info"
+# 银瓜子兑换成银币
+silver2coin = "https://api.live.bilibili.com/pay/v1/Exchange/silver2coin"
