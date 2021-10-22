@@ -24,6 +24,9 @@ class Exp:
         self.share(self.popular_aidList[1]['aid'])
         self.report(self.popular_aidList[1]['aid'],self.popular_aidList[1]['cid'],1000)
         # 投币(关注up主新视频和热门视频)
+        if(coinnum==0):
+            logger.info('设置为白嫖模式，不再为视频投币')
+            return
         if self.money < 1:
             logger.info('硬币不足，终止投币')
             return
