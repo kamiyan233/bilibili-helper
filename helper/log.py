@@ -12,3 +12,5 @@ def Log():
     console.setLevel(logging.INFO)
     logger.addHandler(console)
     return logger
+
+logger = Log()

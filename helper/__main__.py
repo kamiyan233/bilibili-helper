@@ -1,10 +1,8 @@
 import requests,json
-from log import Log
+from log import logger
 from api import coinTodayExp,usernav,mangaSign,attentionVideo,popularVideo,liveSign,coinAdd,videoProgress,videoShare,silverNum,silver2coin
 from setting import bili_jct,coinnum,select_like,headers,SCKEY
 
-# 日志
-logger = Log()
 # 通知到微信
 def sendmsgtowx(text='服务器挂掉啦~~',desp=''):
     if SCKEY == '':
@@ -23,13 +21,13 @@ class Exp:
         self.getAttentionVideo()
         self.getPopularVideo()
         self.silverToCoins()
-        self.share(self.attention_aidList[1]['aid'])
-        self.report(self.attention_aidList[1]['aid'],self.attention_aidList[1]['cid'],1000)
+        self.share(self.popular_aidList[1]['aid'])
+        self.report(self.popular_aidList[1]['aid'],self.popular_aidList[1]['cid'],1000)
         # 投币(关注up主新视频和热门视频)
         if self.money < 1:
             logger.info('硬币不足，终止投币')
             return
-        for item in self.attention_aidList + self.popular_aidList:
+        for item in  self.popular_aidList:
             exp = self.getCoinTodayExp()
             if exp == 50:
                 logger.info('今日投币经验已达成')
@@ -41,7 +39,6 @@ class Exp:
         try:
             res = requests.get(url=usernav,headers=headers)
             user_res = json.loads(res.text)['data']
-            print(user_res)
             money = user_res['money']
             uname = user_res['uname']
             self.uid = user_res['wallet']['mid']
@@ -55,11 +52,14 @@ class Exp:
             logger.info('请求异常')
     # 获取关注的up最新发布的视频
     def getAttentionVideo(self):
+
         url = attentionVideo+'?uid='+str(self.uid)+'&type_list=8&from=&platform=web'
         res = requests.get(url=url,headers=headers)
         video_list = []
-        for item in json.loads(res.text)['data']['cards']:
-            video_list.append({'aid':json.loads(item['card'])['aid'],'cid':json.loads(item['card'])['cid']})
+        resDict = json.loads(res.text)['data']
+        if('cards' in resDict):
+            for item in resDict['cards']:
+                video_list.append({'aid':json.loads(item['card'])['aid'],'cid':json.loads(item['card'])['cid']})
         self.attention_aidList = video_list
     def getCoinTodayExp(self):
         url = coinTodayExp
@@ -131,7 +131,7 @@ class Exp:
             self.hasShare = 1
             logger.info('视频分享成功')
         else:
-            logger.info(share_res['message'])
+            logger.info('每日任务分享视频：' + share_res['message'])
     #漫画签到
     def mangaSign(self):
         try:
@@ -150,7 +150,7 @@ class Exp:
         res1 = requests.get(url=silverNum,headers=headers)
         silver_num = json.loads(res1.text)['data']['silver']
         if silver_num < 700:
-            logger.info('银瓜子不足700兑换硬币')
+            logger.info('直播银瓜子不足700兑换硬币')
             return
         post_data = {
             "csrf_token": bili_jct,
@@ -160,8 +160,8 @@ class Exp:
         res2 = requests.post(url=silver2coin,headers=headers,data=post_data)
         res_silver2Coins = json.loads(res2.text)
         if res_silver2Coins['code']==0:
-            logger.info('银瓜子兑换结果：成功')
+            logger.info('直播银瓜子兑换结果：成功')
         else:
-            logger.info('银瓜子兑换结果：'+res_silver2Coins['msg'])
+            logger.info('直播银瓜子兑换结果：'+res_silver2Coins['msg'])
 
 Exp()
