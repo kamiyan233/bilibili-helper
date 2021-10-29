@@ -172,4 +172,4 @@ class Exp:
             user_res = json.loads(res.text)['data']
             afterexp = user_res['level_info']['current_exp']
             return afterexp - self.currentexp
-exp()
+Exp()
