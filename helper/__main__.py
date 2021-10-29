@@ -119,7 +119,6 @@ class Exp:
         if Res['code'] == 0:
             # 投币成功
             logger.info('上报视频进度成功')
-            self.getCoinTodayExp()
         else:
             logger.info('上报视频进度失败：' + Res['message'])
     #分享指定av号视频
