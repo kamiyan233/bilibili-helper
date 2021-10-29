@@ -34,8 +34,8 @@ class Exp:
         for item in  self.popular_aidList:
             exp = self.getCoinTodayExp()
             if exp == 50:
-                logger.info('今日投币经验已达成')
-                sendmsgtowx("今日经验已达成")
+                logger.info('今日投币任务已达成')
+                sendmsgtowx(f"今日任务已达成,已获得经验{self.compareEXP}")
                 return
             self.coin(item['aid'])
     # 获取用户信息
@@ -48,6 +48,7 @@ class Exp:
             self.uid = user_res['wallet']['mid']
             level_info = user_res['level_info']
             self.money = money
+            self.currentexp = level_info['current_exp']
             logger.info('用户昵称：' + uname)
             logger.info('硬币余额：' + str(money))
             logger.info('当前等级：{},当前经验：{},下一级所需经验：{}'.format(level_info['current_level'],level_info['current_exp'],level_info['next_exp']-level_info['current_exp']))
@@ -166,5 +167,9 @@ class Exp:
             logger.info('直播银瓜子兑换结果：成功')
         else:
             logger.info('直播银瓜子兑换结果：'+res_silver2Coins['message'])
+    def compareEXP(self):
+            res = requests.get(url=usernav,headers=headers)
+            user_res = json.loads(res.text)['data']
+            afterexp = user_res['level_info']['current_exp']
+            return afterexp - self.currentexp
 
-Exp()
