@@ -2,7 +2,7 @@ import requests,json
 from log import logger
 from api import coinTodayExp,usernav,mangaSign,attentionVideo,popularVideo,liveSign,coinAdd,videoProgress,videoShare,silverNum,silver2coin
 from setting import bili_jct,coinnum,select_like,headers,SCKEY
-
+import random
 # 通知到微信
 def sendmsgtowx(text='服务器挂掉啦~~',desp=''):
     if SCKEY == '':
@@ -12,6 +12,7 @@ def sendmsgtowx(text='服务器挂掉啦~~',desp=''):
         url = "https://sc.ftqq.com/"+SCKEY+".send?text="+text+"&desp="+desp
         requests.get(url=url)
 # 每日获取经验
+randomnumber = random.randint(1,50)
 class Exp:
     def __init__(self):
         # hasShare = 0
@@ -21,8 +22,8 @@ class Exp:
         self.getAttentionVideo()
         self.getPopularVideo()
         self.silverToCoins()
-        self.share(self.popular_aidList[1]['aid'])
-        self.report(self.popular_aidList[1]['aid'],self.popular_aidList[1]['cid'],1000)
+        self.share(self.popular_aidList[randomnumber]['aid'])
+        self.report(self.popular_aidList[randomnumber]['aid'],self.popular_aidList[randomnumber]['cid'],1000)
         # 投币(关注up主新视频和热门视频)
         if(coinnum==0):
             logger.info('设置为白嫖模式，不再为视频投币')
