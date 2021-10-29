@@ -34,7 +34,7 @@ class Exp:
         for item in  self.popular_aidList:
             exp = self.getCoinTodayExp()
             if exp == 50:
-                sumexp = self.compareEXP
+                sumexp = self.compareEXP()
                 logger.info('今日投币任务已达成')
                 sendmsgtowx(f"今日任务已达成,已获得经验{sumexp}")
                 logger.info(f"今日任务已达成,已获得经验{sumexp}")
