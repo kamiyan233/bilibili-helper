@@ -37,4 +37,4 @@ jobs:
       - run: pip install -r requirements.txt
       # Runs a single command using the runners shell
       - name: Run the Python scirpt
-        run: python /helper/__main__.py
+        run: python helper/__main__.py
