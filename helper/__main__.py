@@ -165,6 +165,6 @@ class Exp:
         if res_silver2Coins['code']==0:
             logger.info('直播银瓜子兑换结果：成功')
         else:
-            logger.info('直播银瓜子兑换结果：'+res_silver2Coins['msg'])
+            logger.info('直播银瓜子兑换结果：'+res_silver2Coins['message'])
 
 Exp()
